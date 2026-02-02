@@ -1,6 +1,9 @@
 { config, pkgs, ... }:
 
 {
+  # Allow unfree packages like google-chrome
+  nixpkgs.config.allowUnfree = true;
+
   # System state version - don't change this after installation
   system.stateVersion = "24.05";
 
@@ -61,12 +64,14 @@
     # Use a lightweight window manager
     windowManager.openbox.enable = true;
     displayManager.lightdm.enable = true;
+  };
+
     
     # Auto-login for kiosk user
-    displayManager.autoLogin = {
-      enable = true;
-      user = "kiosk";
-    };
+  services.displayManager.autoLogin = {
+    enable = true;
+    user = "kiosk";
+  
   };
 
   # Disable screen blanking and power management
@@ -87,7 +92,7 @@
   };
 
   # Enable webcam support
-  hardware.video.hidpi.enable = true;
+  # hardware.video.hidpi.enable = true;
   
   # Allow camera access
   services.udev.extraRules = ''
