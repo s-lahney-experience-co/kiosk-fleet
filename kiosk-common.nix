@@ -50,7 +50,7 @@
 
   # Install required packages
   environment.systemPackages = with pkgs; [
-    google-chrome
+    chromium
     vim
     git
     networkmanager
@@ -114,7 +114,7 @@ xset s noblank
 unclutter -idle 5 &
 
 # Launch Chrome in kiosk mode
-google-chrome-stable \
+chromium \
   --kiosk \
   --no-first-run \
   --disable-infobars \
