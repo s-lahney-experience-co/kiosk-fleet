@@ -1,0 +1,22 @@
+# NixOS build results
+result
+result-*
+
+# Hardware configs may contain sensitive info - handle carefully
+# Uncomment if you don't want to track hardware configs
+# hardware-configuration.nix
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.bak
