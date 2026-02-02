@@ -127,12 +127,6 @@ EOF
     chown -R kiosk:users /home/kiosk/.config
   '';
 
-  # Additional system packages for kiosk functionality
-  environment.systemPackages = with pkgs; [
-    unclutter # Hide mouse cursor when inactive
-    xorg.xset  # For disabling screen blanking
-  ];
-
   # Enable SSH for remote management (optional but recommended)
   services.openssh = {
     enable = true;
