@@ -113,9 +113,10 @@ unclutter -idle 5 &
 # Wait for X to be ready
 sleep 3
 
-# Launch Chromium in kiosk mode
+# Launch Chromium in kiosk mode with app mode for reliable URL loading
 chromium \
   --kiosk \
+  --app=https://login.experienceco.com \
   --no-sandbox \
   --no-first-run \
   --disable-infobars \
@@ -127,8 +128,7 @@ chromium \
   --start-maximized \
   --disable-dev-shm-usage \
   --use-fake-ui-for-media-stream \
-  --auto-accept-camera-and-microphone-capture \
-  "https://login.experienceco.com" &
+  --auto-accept-camera-and-microphone-capture &
 EOF
     chown -R kiosk:users /home/kiosk/.config
   '';
@@ -147,6 +147,7 @@ EOF
       ExecStart = ''
         ${pkgs.chromium}/bin/chromium \
           --kiosk \
+          --app=https://login.experienceco.com \
           --no-sandbox \
           --no-first-run \
           --disable-infobars \
@@ -158,8 +159,7 @@ EOF
           --start-maximized \
           --disable-dev-shm-usage \
           --use-fake-ui-for-media-stream \
-          --auto-accept-camera-and-microphone-capture \
-          https://login.experienceco.com
+          --auto-accept-camera-and-microphone-capture
       '';
       Restart = "always";
       RestartSec = "5";
