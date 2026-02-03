@@ -87,8 +87,6 @@
     isNormalUser = true;
     description = "Kiosk User";
     extraGroups = [ "networkmanager" "video" "audio" "camera" ];
-    # Set a password or leave it locked for security
-    # initialPassword = "changeme"; # Uncomment if you need local access
   };
 
   # Allow camera access
@@ -98,23 +96,16 @@
     SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTRS{idVendor}=="*", ATTRS{idProduct}=="*", MODE="0660", GROUP="video"
   '';
 
-  # Create openbox config directory for kiosk user
-  system.activationScripts.kioskOpenboxConfig = ''
-    mkdir -p /home/kiosk/.config/openbox
-    cat > /home/kiosk/.config/openbox/autostart << 'EOF'
-# Disable screen blanking
-xset s off
-xset -dpms
-xset s noblank
+  # Create .xprofile to launch Chromium (more reliable than openbox autostart)
+  system.activationScripts.kioskXprofile = ''
+    mkdir -p /home/kiosk
+    cat > /home/kiosk/.xprofile << 'EOF'
+#!/bin/bash
+# Wait for X server to be fully ready
+sleep 5
 
-# Hide cursor after 5 seconds of inactivity
-unclutter -idle 5 &
-
-# Wait for X to be ready
-sleep 3
-
-# Launch Chromium in kiosk mode with app mode for reliable URL loading
-chromium \
+# Launch Chromium in kiosk mode
+DISPLAY=:0 chromium \
   --kiosk \
   --app=https://login.experienceco.com \
   --no-sandbox \
@@ -129,42 +120,19 @@ chromium \
   --disable-dev-shm-usage \
   --use-fake-ui-for-media-stream \
   --auto-accept-camera-and-microphone-capture &
-EOF
-    chown -R kiosk:users /home/kiosk/.config
-  '';
 
-  # Systemd user service to launch Chromium reliably
-  systemd.user.services.kiosk-chromium = {
-    description = "Kiosk Chromium Browser";
-    after = [ "graphical-session.target" ];
-    wantedBy = [ "default.target" ];
-    environment = {
-      DISPLAY = ":0";
-    };
-    serviceConfig = {
-      Type = "simple";
-      ExecStartPre = "${pkgs.coreutils}/bin/sleep 5";
-      ExecStart = ''
-        ${pkgs.chromium}/bin/chromium \
-          --kiosk \
-          --app=https://login.experienceco.com \
-          --no-sandbox \
-          --no-first-run \
-          --disable-infobars \
-          --disable-session-crashed-bubble \
-          --disable-translate \
-          --noerrdialogs \
-          --disable-suggestions-service \
-          --disable-save-password-bubble \
-          --start-maximized \
-          --disable-dev-shm-usage \
-          --use-fake-ui-for-media-stream \
-          --auto-accept-camera-and-microphone-capture
-      '';
-      Restart = "always";
-      RestartSec = "5";
-    };
-  };
+# Disable screen blanking
+sleep 2
+DISPLAY=:0 xset s off &
+DISPLAY=:0 xset -dpms &
+DISPLAY=:0 xset s noblank &
+
+# Hide cursor after inactivity
+DISPLAY=:0 unclutter -idle 5 &
+EOF
+    chmod +x /home/kiosk/.xprofile
+    chown kiosk:users /home/kiosk/.xprofile
+  '';
 
   # Enable SSH for remote management (optional but recommended)
   services.openssh = {
