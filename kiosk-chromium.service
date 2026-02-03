@@ -1,0 +1,32 @@
+[Unit]
+After=graphical-session.target
+Description=Kiosk Chromium Browser
+
+[Service]
+Environment="DISPLAY=:0"
+Environment="LOCALE_ARCHIVE=/nix/store/44pwzy3p42c6l6d5nips6pqqx8aph12x-glibc-locales-2.39-52/lib/locale/locale-archive"
+Environment="PATH=/nix/store/n9gh8gxx5xx51ihgll2l20ar9b2vmgzy-coreutils-9.5/bin:/nix/store/qdk6ds72q8xf5fzi16x7736bwz8aydic-findutils-4.9.0/bin:/nix/store/8nss7h1yk4jihkmr4xj5ihrbdkv4y1wy-gnugrep-3.11/bin:/nix/store/y8br765djcj51ls9lb3kylkrvc2wan3p-gnused-4.9/bin:/nix/store/rhq3rwyghbqq4lnkmdf4vsrazr2aa5a7-systemd-255.9/bin:/nix/store/n9gh8gxx5xx51ihgll2l20ar9b2vmgzy-coreutils-9.5/sbin:/nix/store/qdk6ds72q8xf5fzi16x7736bwz8aydic-findutils-4.9.0/sbin:/nix/store/8nss7h1yk4jihkmr4xj5ihrbdkv4y1wy-gnugrep-3.11/sbin:/nix/store/y8br765djcj51ls9lb3kylkrvc2wan3p-gnused-4.9/sbin:/nix/store/rhq3rwyghbqq4lnkmdf4vsrazr2aa5a7-systemd-255.9/sbin"
+Environment="TZDIR=/nix/store/vil8wqacfkz8qx09aymahxv48d1zq3g2-tzdata-2024b/share/zoneinfo"
+ExecStart=/nix/store/ja1wmdwplgyl52x7jd0d7p0gnpxkcsvq-chromium-131.0.6778.204/bin/chromium \
+  --kiosk \
+  --no-sandbox \
+  --no-first-run \
+  --disable-infobars \
+  --disable-session-crashed-bubble \
+  --disable-translate \
+  --noerrdialogs \
+  --disable-suggestions-service \
+  --disable-save-password-bubble \
+  --start-maximized \
+  --disable-dev-shm-usage \
+  --use-fake-ui-for-media-stream \
+  --auto-accept-camera-and-microphone-capture \
+  https://login.experienceco.com
+
+ExecStartPre=/nix/store/n9gh8gxx5xx51ihgll2l20ar9b2vmgzy-coreutils-9.5/bin/sleep 5
+Restart=always
+RestartSec=5
+Type=simple
+
+[Install]
+WantedBy=default.target
