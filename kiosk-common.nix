@@ -66,12 +66,12 @@
     # Use a lightweight window manager
     windowManager.openbox.enable = true;
     displayManager.lightdm.enable = true;
-    
-    # Auto-login for kiosk user
-    displayManager.autoLogin = {
-      enable = true;
-      user = "kiosk";
-    };
+  };
+
+  # Auto-login for kiosk user (must be outside services.xserver in newer NixOS)
+  services.displayManager.autoLogin = {
+    enable = true;
+    user = "kiosk";
   };
 
   # Disable screen blanking and power management
