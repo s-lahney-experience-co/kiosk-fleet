@@ -55,6 +55,9 @@
     git
     networkmanager
     htop
+    unclutter
+    xorg.xset	
+	
   ];
 
   # X11 windowing system
@@ -92,7 +95,7 @@
   };
 
   # Enable webcam support
-  # hardware.video.hidpi.enable = true;
+  hardware.video.hidpi.enable = true;
   
   # Allow camera access
   services.udev.extraRules = ''
@@ -154,4 +157,37 @@ EOF
     runtimeTime = "30s";
     rebootTime = "10min";
   };
+  
+# Systemd user service to launch Chromium reliably
+  systemd.user.services.kiosk-chromium = {
+    description = "Kiosk Chromium Browser";
+    after = [ "graphical-session.target" ];
+    wantedBy = [ "default.target" ];
+    environment = {
+      DISPLAY = ":0";
+    };
+    serviceConfig = {
+      Type = "simple";
+      ExecStartPre = "${pkgs.coreutils}/bin/sleep 5";
+      ExecStart = ''
+        ${pkgs.chromium}/bin/chromium \
+          --kiosk \
+          --no-sandbox \
+          --no-first-run \
+          --disable-infobars \
+          --disable-session-crashed-bubble \
+          --disable-translate \
+          --noerrdialogs \
+          --disable-suggestions-service \
+          --disable-save-password-bubble \
+          --start-maximized \
+          --disable-dev-shm-usage \
+          --use-fake-ui-for-media-stream \
+          --auto-accept-camera-and-microphone-capture \
+          https://login.experienceco.com
+      '';
+      Restart = "always";
+      RestartSec = "5";
+    };
+  };  
 }
