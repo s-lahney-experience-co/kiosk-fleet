@@ -57,7 +57,6 @@
     htop
     unclutter
     xorg.xset	
-	
   ];
 
   # X11 windowing system
@@ -93,9 +92,6 @@
     # Set a password or leave it locked for security
     # initialPassword = "changeme"; # Uncomment if you need local access
   };
-
-  # Enable webcam support
-  hardware.video.hidpi.enable = true;
   
   # Allow camera access
   services.udev.extraRules = ''
@@ -108,30 +104,31 @@
   system.activationScripts.kioskOpenboxConfig = ''
     mkdir -p /home/kiosk/.config/openbox
     cat > /home/kiosk/.config/openbox/autostart << 'EOF'
-# Disable screen blanking
-xset s off
-xset -dpms
-xset s noblank
 
-# Hide cursor after 5 seconds of inactivity
-unclutter -idle 5 &
+  # Disable screen blanking
+  xset s off
+  xset -dpms
+  xset s noblank
 
-# Launch Chrome in kiosk mode
-chromium \
-  --kiosk \
-  --no-first-run \
-  --disable-infobars \
-  --disable-session-crashed-bubble \
-  --disable-translate \
-  --noerrdialogs \
-  --disable-suggestions-service \
-  --disable-save-password-bubble \
-  --start-maximized \
-  --disable-dev-shm-usage \
-  --use-fake-ui-for-media-stream \
-  --auto-accept-camera-and-microphone-capture \
-  "https://login.experienceco.com" &
-EOF
+  # Hide cursor after 5 seconds of inactivity
+  unclutter -idle 5 &
+
+  # Launch Chrome in kiosk mode
+  chromium \
+    --kiosk \
+    --no-first-run \
+    --disable-infobars \
+    --disable-session-crashed-bubble \
+    --disable-translate \
+    --noerrdialogs \
+    --disable-suggestions-service \
+    --disable-save-password-bubble \
+    --start-maximized \
+    --disable-dev-shm-usage \
+    --use-fake-ui-for-media-stream \
+    --auto-accept-camera-and-microphone-capture \
+    "https://login.experienceco.com" &
+   EOF
     chown -R kiosk:users /home/kiosk/.config
   '';
 
@@ -158,7 +155,7 @@ EOF
     rebootTime = "10min";
   };
   
-# Systemd user service to launch Chromium reliably
+  # Systemd user service to launch Chromium reliably
   systemd.user.services.kiosk-chromium = {
     description = "Kiosk Chromium Browser";
     after = [ "graphical-session.target" ];
