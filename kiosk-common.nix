@@ -1,6 +1,8 @@
 { config, pkgs, ... }:
 
 {
+  # Updated 1:10pm 3-feb-2026
+
   # Allow unfree packages like google-chrome
   nixpkgs.config.allowUnfree = true;
 
