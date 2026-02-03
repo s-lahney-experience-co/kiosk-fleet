@@ -1,8 +1,6 @@
 { config, pkgs, ... }:
 
 {
-  # Updated 1:10pm 3-feb-2026
-
   # Allow unfree packages like google-chrome
   nixpkgs.config.allowUnfree = true;
 
@@ -17,12 +15,12 @@
   networking.networkmanager.enable = true;
 
   # Time zone
-  time.timeZone = "Australia/Sydney"; # Adjust to your location
+  time.timeZone = "Australia/Sydney";
 
   # Automatic updates from your flake repository
   system.autoUpgrade = {
     enable = true;
-    flake = "github:s-lahney-experience-co/kiosk-fleet"; # UPDATE THIS with your GitHub username/org
+    flake = "github:s-lahney-experience-co/kiosk-fleet";
     dates = "04:00"; # Daily at 4 AM
     allowReboot = false; # Set to true if you want automatic reboots after updates
     flags = [
@@ -58,7 +56,7 @@
     networkmanager
     htop
     unclutter
-    xorg.xset	
+    xorg.xset
   ];
 
   # X11 windowing system
@@ -68,14 +66,12 @@
     # Use a lightweight window manager
     windowManager.openbox.enable = true;
     displayManager.lightdm.enable = true;
-  };
-
     
     # Auto-login for kiosk user
-  services.displayManager.autoLogin = {
-    enable = true;
-    user = "kiosk";
-  
+    displayManager.autoLogin = {
+      enable = true;
+      user = "kiosk";
+    };
   };
 
   # Disable screen blanking and power management
@@ -90,11 +86,11 @@
   users.users.kiosk = {
     isNormalUser = true;
     description = "Kiosk User";
-    extraGroups = [ "networkmanager" "video" "audio" "camera" ]; # Added camera group
+    extraGroups = [ "networkmanager" "video" "audio" "camera" ];
     # Set a password or leave it locked for security
     # initialPassword = "changeme"; # Uncomment if you need local access
   };
-  
+
   # Allow camera access
   services.udev.extraRules = ''
     # Allow video group to access webcams
@@ -106,57 +102,37 @@
   system.activationScripts.kioskOpenboxConfig = ''
     mkdir -p /home/kiosk/.config/openbox
     cat > /home/kiosk/.config/openbox/autostart << 'EOF'
+# Disable screen blanking
+xset s off
+xset -dpms
+xset s noblank
 
-  # Disable screen blanking
-  xset s off
-  xset -dpms
-  xset s noblank
+# Hide cursor after 5 seconds of inactivity
+unclutter -idle 5 &
 
-  # Hide cursor after 5 seconds of inactivity
-  unclutter -idle 5 &
+# Wait for X to be ready
+sleep 3
 
-  # Launch Chrome in kiosk mode
-  chromium \
-    --kiosk \
-    --no-first-run \
-    --disable-infobars \
-    --disable-session-crashed-bubble \
-    --disable-translate \
-    --noerrdialogs \
-    --disable-suggestions-service \
-    --disable-save-password-bubble \
-    --start-maximized \
-    --disable-dev-shm-usage \
-    --use-fake-ui-for-media-stream \
-    --auto-accept-camera-and-microphone-capture \
-    "https://login.experienceco.com" &
-   EOF
+# Launch Chromium in kiosk mode
+chromium \
+  --kiosk \
+  --no-sandbox \
+  --no-first-run \
+  --disable-infobars \
+  --disable-session-crashed-bubble \
+  --disable-translate \
+  --noerrdialogs \
+  --disable-suggestions-service \
+  --disable-save-password-bubble \
+  --start-maximized \
+  --disable-dev-shm-usage \
+  --use-fake-ui-for-media-stream \
+  --auto-accept-camera-and-microphone-capture \
+  "https://login.experienceco.com" &
+EOF
     chown -R kiosk:users /home/kiosk/.config
   '';
 
-  # Enable SSH for remote management (optional but recommended)
-  services.openssh = {
-    enable = true;
-    settings.PermitRootLogin = "no";
-    settings.PasswordAuthentication = false; # Use SSH keys only
-  };
-
-  # Firewall configuration
-  networking.firewall = {
-    enable = true;
-    allowedTCPPorts = [ 22 ]; # SSH
-  };
-
-  # Sound support (in case you need audio)
-  sound.enable = true;
-  hardware.pulseaudio.enable = true;
-
-  # Watchdog to reboot if system hangs (optional)
-  systemd.watchdog = {
-    runtimeTime = "30s";
-    rebootTime = "10min";
-  };
-  
   # Systemd user service to launch Chromium reliably
   systemd.user.services.kiosk-chromium = {
     description = "Kiosk Chromium Browser";
@@ -188,5 +164,28 @@
       Restart = "always";
       RestartSec = "5";
     };
-  };  
+  };
+
+  # Enable SSH for remote management (optional but recommended)
+  services.openssh = {
+    enable = true;
+    settings.PermitRootLogin = "prohibit-password";
+    settings.PasswordAuthentication = true; # Use SSH keys for production
+  };
+
+  # Firewall configuration
+  networking.firewall = {
+    enable = true;
+    allowedTCPPorts = [ 22 ]; # SSH
+  };
+
+  # Sound support (in case you need audio)
+  sound.enable = true;
+  hardware.pulseaudio.enable = true;
+
+  # Watchdog to reboot if system hangs (optional)
+  systemd.watchdog = {
+    runtimeTime = "30s";
+    rebootTime = "10min";
+  };
 }
