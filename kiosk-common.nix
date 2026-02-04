@@ -108,22 +108,15 @@ export XDG_RUNTIME_DIR=/run/user/1000
 export DISPLAY=:0
 export HOME=/home/kiosk
 
-google-chrome-stable \
+google-chrome \
   --kiosk \
   --app=https://login.experienceco.com \
   --no-sandbox \
   --disable-gpu \
-  --disable-dev-shm-usage \
   --no-first-run \
-  --disable-infobars \
-  --disable-session-crashed-bubble \
-  --disable-translate \
-  --noerrdialogs \
-  --disable-suggestions-service \
+  --auto-accept-camera-and-microphone-capture \
   --disable-save-password-bubble \
-  --start-maximized \
-  --use-fake-ui-for-media-stream \
-  --auto-accept-camera-and-microphone-capture &
+  --start-maximized  &
 
 # Disable screen blanking
 sleep 2
