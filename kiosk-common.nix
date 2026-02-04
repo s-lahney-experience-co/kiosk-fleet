@@ -152,7 +152,6 @@ EOF
   };
 
   # Sound support (in case you need audio)
-  sound.enable = true;
   hardware.pulseaudio.enable = true;
 
   # Watchdog to reboot if system hangs (optional)
