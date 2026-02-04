@@ -152,7 +152,9 @@ EOF
   };
 
   # Sound support (in case you need audio)
-  hardware.pulseaudio.enable = true;
+  hardware.pulseaudio.enable = false;
+  services.pipewire.enable = true;
+  services.pipewire.wireplumber.enable = true;
 
   # Watchdog to reboot if system hangs (optional)
   systemd.watchdog = {
