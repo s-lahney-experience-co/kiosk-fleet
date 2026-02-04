@@ -148,9 +148,9 @@ EOF
   services.pipewire.enable = true;
   services.pipewire.wireplumber.enable = true;
 
-  # Watchdog to reboot if system hangs (optional)
-  systemd.watchdog = {
-    runtimeTime = "30s";
-    rebootTime = "10min";
+  # Systemd watchdog to reboot if system hangs (optional)
+  systemd.settings.Manager = {
+    RuntimeWatchdogSec = "30s";
+    RebootWatchdogSec = "10min";
   };
 }
