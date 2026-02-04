@@ -50,7 +50,7 @@
 
   # Install required packages
   environment.systemPackages = with pkgs; [
-    chromium
+    google-chrome
     vim
     git
     networkmanager
@@ -96,19 +96,24 @@
     SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTRS{idVendor}=="*", ATTRS{idProduct}=="*", MODE="0660", GROUP="video"
   '';
 
-  # Create .xprofile to launch Chromium (more reliable than openbox autostart)
+  # Create .xprofile to launch Google Chrome in kiosk mode
   system.activationScripts.kioskXprofile = ''
     mkdir -p /home/kiosk
     cat > /home/kiosk/.xprofile << 'EOF'
 #!/bin/bash
-# Wait for X server to be fully ready
 sleep 5
 
-# Launch Chromium in kiosk mode
-DISPLAY=:0 chromium \
+# Set correct user runtime directory
+export XDG_RUNTIME_DIR=/run/user/1000
+export DISPLAY=:0
+export HOME=/home/kiosk
+
+google-chrome-stable \
   --kiosk \
   --app=https://login.experienceco.com \
   --no-sandbox \
+  --disable-gpu \
+  --disable-dev-shm-usage \
   --no-first-run \
   --disable-infobars \
   --disable-session-crashed-bubble \
@@ -117,7 +122,6 @@ DISPLAY=:0 chromium \
   --disable-suggestions-service \
   --disable-save-password-bubble \
   --start-maximized \
-  --disable-dev-shm-usage \
   --use-fake-ui-for-media-stream \
   --auto-accept-camera-and-microphone-capture &
 
