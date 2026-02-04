@@ -115,8 +115,7 @@ google-chrome \
   --disable-gpu \
   --no-first-run \
   --auto-accept-camera-and-microphone-capture \
-  --disable-save-password-bubble \
-  --start-maximized  &
+  --disable-save-password-bubble &
 
 # Disable screen blanking
 sleep 2
