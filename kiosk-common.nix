@@ -152,7 +152,7 @@ EOF
   };
 
   # Sound support (in case you need audio)
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   services.pipewire.enable = true;
   services.pipewire.wireplumber.enable = true;
 
