@@ -1,6 +1,6 @@
 {
   description = "ExperienceCo Kiosk Fleet Configuration";
-
+  # Note: hardware-configuration.nix is generated per-kiosk during installation
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
   };
