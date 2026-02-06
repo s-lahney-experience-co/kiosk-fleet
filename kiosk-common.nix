@@ -41,8 +41,6 @@
   # Keep only the last 5 system generations
   boot.loader.systemd-boot.configurationLimit = 5;  # Adjust based on your bootloader
   
-  # Limit number of boot generations (important for microSD cards)
-  boot.loader.systemd-boot.configurationLimit = 5;
   
   # Limit journal size to save space
   services.journald.extraConfig = ''
