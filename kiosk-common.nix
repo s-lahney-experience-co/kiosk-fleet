@@ -92,6 +92,11 @@
     extraGroups = [ "networkmanager" "video" "audio" "camera" ];
   };
   
+  # SSH access for root user
+  users.users.root.openssh.authorizedKeys.keys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINE7ySbyrj28cD02q6vL3Azf0Sx1a0IpMXDQ0skEJY6S workspaces@SBB-WKSTN198"
+  ];
+  
   # Allow camera access
   services.udev.extraRules = ''
     # Allow video group to access webcams
@@ -151,7 +156,7 @@ EOF
   services.openssh = {
     enable = true;
     settings.PermitRootLogin = "prohibit-password";
-    settings.PasswordAuthentication = true; # Use SSH keys for production
+    settings.PasswordAuthentication = false;
   };
   # Firewall configuration
   networking.firewall = {
@@ -167,4 +172,6 @@ EOF
     RuntimeWatchdogSec = "30s";
     RebootWatchdogSec = "10min";
   };
+  
+  
 }
