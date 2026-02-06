@@ -23,9 +23,9 @@
   # Automatic updates from your flake repository
   system.autoUpgrade = {
     enable = true;
-    flake = "github:s-lahney-experience-co/kiosk-fleet";
+    flake = "github:s-lahney-experience-co/kiosk-fleet#${config.networking.hostName}";
     dates = "04:00"; # Daily at 4 AM
-    allowReboot = false; # Set to true if you want automatic reboots after updates
+    allowReboot = true; # Set to true if you want automatic reboots after updates
     flags = [
       "--update-input" "nixpkgs"
       "--commit-lock-file"
