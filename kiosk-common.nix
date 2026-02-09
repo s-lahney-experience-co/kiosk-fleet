@@ -139,8 +139,10 @@ google-chrome \
   --disable-infobars \
   --disable-session-crashed-bubble \
   --disable-save-password-bubble \
-  --auto-accept-camera-and-microphone-capture &
-# Disable screen blanking
+  --auto-accept-camera-and-microphone-capture \
+  --password-store=basic \
+  --disable-features=PasswordManager,PasswordManagerOnboarding \
+  --disable-password-manager-reauthentication &
 sleep 2
 DISPLAY=:0 xset s off &
 DISPLAY=:0 xset -dpms &
