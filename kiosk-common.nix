@@ -95,6 +95,8 @@
   # SSH access for root user
   users.users.root.openssh.authorizedKeys.keys = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINE7ySbyrj28cD02q6vL3Azf0Sx1a0IpMXDQ0skEJY6S workspaces@SBB-WKSTN198"
+	"ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINmz7GK4XmoR7K1I4cKzcBVYokfvkt0MO+5XHaLwrE7O root@linuxfs.skydive.com.au"
+
   ];
   
   # Allow camera access
